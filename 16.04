@@ -1,0 +1,117 @@
+import { Text, View, ScrollView, StyleSheet, TextInput, Button } from "react-native";
+import { useState } from "react";
+
+export default function Index() {
+  const [sehirler, setSehirler] = useState([
+    {id: 1, sehir: 'Ardahan', sicaklik: 10, durum: 'Güneşli'},
+    {id: 2, sehir: 'İstanbul', sicaklik: 30, durum: 'Bulutlu'},
+  ]);
+
+  const [yeniSehir, setYeniSehir] = useState("");
+  const [yeniSicaklik, setYeniSicaklik] = useState("");
+
+  // Şehir + sıcaklık ekleme
+  const sehirEkle = () => {
+    if (yeniSehir.trim() === "" || yeniSicaklik.trim() === "") return;
+
+    const yeni = {
+      id: Date.now(),
+      sehir: yeniSehir,
+      sicaklik: parseInt(yeniSicaklik),
+      durum: 'Bilinmiyor'
+    };
+
+    setSehirler([...sehirler, yeni]);
+    setYeniSehir("");
+    setYeniSicaklik("");
+  };
+
+ 
+  const sehirSil = (id) => {
+    setSehirler(sehirler.filter(item => item.id !== id));
+  };
+
+  return (
+    <ScrollView style={stil.kaydirmaKutusu}>
+      <View style={stil.icerik}>
+        
+        <Text style={stil.baslik}>Şehir Ekle</Text>
+
+        <TextInput
+          style={stil.input}
+          placeholder="Şehir adı gir"
+          value={yeniSehir}
+          onChangeText={setYeniSehir}
+        />
+
+        <TextInput
+          style={stil.input}
+          placeholder="Sıcaklık gir (°)"
+          value={yeniSicaklik}
+          onChangeText={setYeniSicaklik}
+          keyboardType="numeric"
+        />
+
+        <Button title="Şehir Ekle" onPress={sehirEkle} />
+
+        <Text style={stil.baslik}>Şehirler</Text>
+
+        {sehirler.map((eleman) => (
+          <View key={eleman.id} style={stil.kartKutu}>
+            <Text style={stil.kartSehir}>{eleman.sehir}</Text>
+            <Text style={stil.kartSicaklik}>{eleman.sicaklik}°</Text>
+            <Text style={stil.kartDurum}>{eleman.durum}</Text>
+
+            <Button title="Sil" onPress={() => sehirSil(eleman.id)} />
+          </View>
+        ))}
+
+      </View>
+    </ScrollView>
+  );
+}
+
+const stil = StyleSheet.create({
+  kaydirmaKutusu: {
+    flex:1,
+    backgroundColor: 'grin',
+  },
+  icerik: {
+    padding: 20,
+  },
+  baslik:{
+    fontSize: 28,
+    fontWeight: 'bold',
+    color: '#1976D2',
+    marginBottom: 20,
+  },
+  input:{
+    borderWidth:1,
+    borderColor:'#ccc',
+    padding:10,
+    marginBottom:10,
+    borderRadius:10,
+    backgroundColor:'#fff'
+  },
+  kartKutu:{
+    backgroundColor: 'grin',
+    borderRadius: 15,
+    padding: 20,
+    marginBottom:20,
+    flexDirection: 'row',
+    alignItems:'center',
+  },
+  kartSehir:{
+    fontSize: 20,
+    fontWeight: 'bold',
+    flex: 1,
+  },
+  kartSicaklik:{
+    fontSize: 20,
+    marginRight:10,
+  },
+  kartDurum:{
+    fontSize: 14,
+    marginRight:10,
+  }
+});
